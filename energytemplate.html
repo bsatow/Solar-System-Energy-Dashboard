@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Dashboard</title>
+    <link rel="stylesheet" href="styles.css"> 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .value {
+            font-size: 2em;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Energy Dashboard</h1>
+    <div class="dashboard">
+        <div class="card">
+            <h2>LED ENERGY USE</h2>
+            <p class="value" id="ledEnergyUse">0 kWh</p>
+        </div>
+        <div class="card">
+            <h2>LED DEMAND</h2>
+            <p class="value" id="ledDemand">0 kW</p>
+        </div>
+        <div class="card">
+            <h2>LED LIGHTS HOUR OF OPERATIONS</h2>
+            <p class="value" id="ledLightsHours">0 hrs/day</p>
+        </div>
+        <div class="card">
+            <h2>Battery Capacity</h2>
+            <p class="value" id="batteryCapacity">0 Amp-Hrs</p>
+        </div>
+        <div class="card">
+            <h2>Battery Charge</h2>
+            <p class="value" id="batteryCharge">0 kWh</p>
+        </div>
+        <div class="card">
+            <h2>Battery Supply</h2>
+            <p class="value" id="batterySupply">0 kWh</p>
+        </div>
+        <div class="card">
+            <h2>Solar Array Capacity</h2>
+            <p class="value" id="solarArrayCapacity">0 kW</p>
+        </div>
+        <div class="card">
+            <h2>Solar Array Generation</h2>
+            <p class="value" id="solarArrayGeneration">0 kWh</p>
+        </div>
+        <div class="card">
+            <h2>Solar Array Potential</h2>
+            <p class="value" id="solarArrayPotential">0 kW</p>
+        </div>
+        <div class="card">
+            <h2>Solar Irradiance</h2>
+            <p class="value" id="solarIrradiance">0 kW/m²</p>
+        </div>
+        <div class="card">
+            <h2>Pump Station Energy Use</h2>
+            <p class="value" id="pumpStationEnergyUse">0 kWh</p>
+        </div>
+        <div class="card">
+            <h2>Pump Station Demand</h2>
+            <p class="value" id="pumpStationDemand">0 kW</p>
+        </div>
+        <div class="card">
+            <h2>Net Meter Directional</h2>
+            <p class="value" id="netMeterDirectional">0 kWh</p>
+        </div>
+    </div>
+    <script src="script.js"></script> <!-- link to js for fetching data -->
+</body>
+</html>
