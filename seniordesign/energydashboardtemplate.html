@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Energy Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-left: 100px;
+        }
+
+        .header img {
+            width: 100px;
+            height: auto;
+            margin-right: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+            color: #003366;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .value {
+            font-size: 2em;
+            color: #007bff;
+        }
+
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        body.dark-mode .card {
+            background: #444;
+            color: #fff;
+        }
+
+        .toggle-dark-mode {
+            cursor: pointer;
+            font-size: 24px;
+            background: none;
+            border: none;
+            outline: none;
+            color: #003366;
+            padding: 10px;
+        }
+
+        .toggle-dark-mode:focus {
+            outline: none;
+        }
+
+        body.dark-mode .toggle-dark-mode {
+            color: #fff;
+        }
+
+
+        .live-feed {
+            grid-column: span 3;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .live-feed iframe,
+        .live-feed video {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            height: 20px;
+            margin: 10px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #007bff;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .circle-gauge {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            margin: 0 auto;
+        }
+
+        .circle-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #f0c419;
+            clip-path: inset(0 0 50% 0);
+            transform: rotate(0deg);
+            transform-origin: center;
+            transition: transform 0.5s ease;
+        }
+
+        .circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div>
+            <img src="perrysburg_energy_logo.png" alt="Perrysburg Energy Logo">
+            <h1>Energy Dashboard</h1>
+        </div>
+        <button class="toggle-dark-mode" id="themeToggleBtn">
+            ☀️ <!-- Sun Icon for Light Mode -->
+        </button>
+    </div>
+    <hr>
+
+    <div class="dashboard">
+        <div class="card">
+            <h2>LED ENERGY USE</h2>
+            <canvas id="ledEnergyChart"></canvas>
+            <p class="value" id="ledEnergyUse">0 kWh</p>
+        </div>
+        <div class="card">
+            <h2>LED DEMAND</h2>
+            <canvas id="ledDemandChart"></canvas>
+            <p class="value" id="ledDemand">0 kW</p>
+        </div>
+        <div class="card">
+            <h2>LED LIGHTS HOUR OF OPERATIONS</h2>
+            <canvas id="ledLightsHoursChart"></canvas>
+            <p class="value" id="ledLightsHours">0 hrs/day</p>
+        </div>
+        <div class="card">
+            <h2>Battery Capacity</h2>
+            <canvas id="batteryCapacityChart"></canvas>
+            <p class="value" id="batteryCapacity">0 Amp-Hrs</p>
+        </div>
+        <div class="card">
+            <h2>Battery Charge</h2>
+            <canvas id="batteryChargeChart"></canvas>
+            <p class="value" id="batteryCharge">0 kWh</p>
+        </div>
+        <div class="card">
+            <h2>Battery Supply</h2>
+            <canvas id="batterySupplyChart"></canvas>
+            <p class="value" id="batterySupply">0 kWh</p>
+        </div>
+        <div class="card">
+            <h2>Solar Array Capacity</h2>
+            <canvas id="solarArrayCapacityChart"></canvas>
+            <p class="value" id="solarArrayCapacity">0 kW</p>
+        </div>
+        <div class="card">
+            <h2>Solar Array Generation</h2>
+            <canvas id="solarArrayGenerationChart"></canvas>
+            <p class="value" id="solarArrayGeneration">0 kWh</p>
+        </div>
+        <div class="card">
+            <h2>Solar Array Potential</h2>
+            <canvas id="solarArrayPotentialGauge"></canvas>
+            <p class="value" id="solarArrayPotential">70 kW</p>
+        </div>
+        <div class="card">
+            <h2>Solar Irradiance</h2>
+            <div class="circle-gauge">
+                <div class="circle-fill" id="circleFill"></div>
+                <div class="circle-text" id="solarIrradiance">120 W/m²</div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Pump Station Energy Use</h2>
+            <div class="progress-bar">
+                <div class="progress" id="pumpStationEnergyUseFill"></div>
+            </div>
+            <p class="value" id="pumpStationEnergyUse">0.08 hrs/day</p>
+        </div>
+
+        <div class="card">
+            <h2>Pump Station Demand</h2>
+            <div class="progress-bar">
+                <div class="progress" id="pumpStationDemandFill"></div>
+            </div>
+            <p class="value" id="pumpStationDemand">40 hrs/day</p>
+        </div>
+
+        <div class="card">
+            <h2>Net Meter Directional</h2>
+            <div class="progress-bar">
+                <div class="progress" id="netMeterDirectionalFill"></div>
+            </div>
+            <p class="value" id="netMeterDirectional">65 hrs/day</p>
+        </div>
+
+
+        <div class="live-feed">
+            <h2>Live Feed of the Lights</h2>
+            <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
